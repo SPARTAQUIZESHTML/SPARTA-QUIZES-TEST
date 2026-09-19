@@ -527,6 +527,7 @@
 
 <div id="toast"></div>
 <script src="tests.js"></script>
+<script src="allen-tests.js"></script>
 <script>
 /*__TESTS_START__*/
 // Yahan tests/ folder ke saare test auto-bundle hote hain (build.py se)
@@ -14366,7 +14367,7 @@ function allTests(){
   const out = [];
   const custom = loadCustom();
   custom.forEach(t=>{ t.custom = true; });
-  const pool = (window.BUNDLED_TESTS||[]).concat(window.EXTERNAL_TESTS||[], custom);
+  const pool = (window.BUNDLED_TESTS||[]).concat(window.EXTERNAL_TESTS||[], window.ALLEN_TESTS||[], custom);
   pool.forEach(t=>{
     const i = out.findIndex(x=>x.id===t.id);
     if(i>=0) out[i]=t; else out.push(t);
