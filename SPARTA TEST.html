@@ -38,24 +38,6 @@
   .reader-page img{display:block; width:100%; height:auto; border-radius:10px}
   .reader-tag{font-size:.75rem; font-weight:900; color:#7C6FA0; letter-spacing:.4px; margin:2px 6px}
 
-  /* ---------- PREMIUM + ABOUT US special folders ---------- */
-  .fanim-prem{animation:premg 2.2s ease-in-out infinite}
-  @keyframes premg{0%,100%{filter:drop-shadow(0 0 2px rgba(245,158,11,.5)); transform:scale(1)} 50%{filter:drop-shadow(0 0 13px rgba(245,158,11,.95)); transform:scale(1.09)}}
-  .fanim-sansad{animation:sansg 2.6s ease-in-out infinite}
-  @keyframes sansg{0%,100%{filter:drop-shadow(0 0 2px rgba(59,130,246,.5))} 50%{filter:drop-shadow(0 0 13px rgba(96,165,250,.95))}}
-  .flagw{transform-box:fill-box; transform-origin:left center; animation:flagw 1.6s ease-in-out infinite}
-  @keyframes flagw{0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-12deg)}}
-  .darkcard{background:linear-gradient(140deg,#1E1B4B,#312E81 60%,#1E1B4B); border:1.5px solid rgba(129,140,248,.5); border-radius:18px; padding:16px; color:#E0E7FF; box-shadow:0 8px 24px rgba(30,27,75,.35)}
-  .neon{color:#22D3EE; text-shadow:0 0 8px rgba(34,211,238,.85)}
-  .neonp{color:#F0ABFC; text-shadow:0 0 9px rgba(240,171,252,.85)}
-  .neong{color:#FCD34D; text-shadow:0 0 9px rgba(252,211,77,.9)}
-  .feat{display:flex; gap:12px; align-items:flex-start; background:rgba(255,255,255,.06); border:1px solid rgba(252,211,77,.35); border-radius:14px; padding:12px; margin:10px 0}
-  .feat .fic{font-size:1.5rem; line-height:1.2}
-  .feat b{color:#FCD34D; text-shadow:0 0 8px rgba(252,211,77,.6)}
-  .feat p{margin:2px 0 0; font-size:.86rem; color:#DBEAFE; font-weight:600; line-height:1.45}
-  .aline{display:flex; gap:10px; background:rgba(255,255,255,.05); border-left:3px solid #818CF8; border-radius:10px; padding:9px 12px; margin:8px 0; font-size:.9rem; font-weight:600; color:#E0E7FF; line-height:1.5}
-  .tgjoin{display:block; text-align:center; background:linear-gradient(90deg,#F59E0B,#F97316); color:#fff; font-weight:900; padding:14px; border-radius:14px; text-decoration:none; font-size:1.05rem; animation:joinp 1.8s ease-in-out infinite; margin-top:6px}
-  @keyframes joinp{0%,100%{box-shadow:0 0 10px rgba(249,115,22,.45)} 50%{box-shadow:0 0 24px rgba(249,115,22,.9)}}
 
 
 
@@ -416,83 +398,6 @@
 </section>
 
 <!-- ============ TEST ============ -->
-<!-- ============ PREMIUM ============ -->
-<section id="scrPrem" class="screen">
-  <header class="top">
-    <div class="brand small">
-      <div class="blogo">⚔️</div>
-      <div><div class="bname">SPARTA</div><div class="bsub2">NEET 2027 • CBT</div></div>
-    </div>
-    <button class="btn ghost" onclick="backHome()">← Home</button>
-  </header>
-  <div class="wrap" style="max-width:760px">
-    <div class="darkcard" style="text-align:center; padding:22px 16px">
-      <img id="premHero" alt="SPARTA Premium" class="fanim-prem" style="width:86px;height:86px;border-radius:50%;border:3px solid #F59E0B;object-fit:cover;display:inline-block;box-shadow:0 6px 22px rgba(245,158,11,.45)">
-      <h2 style="margin:6px 0 2px; font-size:1.5rem; letter-spacing:1px; color:#FCD34D; text-shadow:0 0 12px rgba(252,211,77,.9)">⚔️ SPARTA PREMIUM</h2>
-      <div style="color:#C7D2FE; font-weight:700; font-size:.88rem">Level Up Your Preparation. Become Unstoppable.</div>
-    </div>
-
-    <div class="darkcard">
-      <div class="feat"><span class="fic">⚡</span><span><b>More &amp; More Clear CBT Experience</b><p>A faster, cleaner and <b>crystal-clear CBT interface</b> — built to feel exactly like the real NEET exam. Zero lag, zero distraction, pure focus.</p></span></div>
-      <div class="feat"><span class="fic">🎯</span><span><b>Top Handpicked Question Material</b><p>SPARTA Premium contains our <b>top handpicked questions</b> — every single question is selected, solved and verified by Team Vidhayak. No filler. Only rank-boosters.</p></span></div>
-      <div class="feat"><span class="fic">📚</span><span><b>Premium Test Series</b><p>Exclusive full-length premium mocks beyond the free folder — the papers that toppers secretly practice.</p></span></div>
-      <div class="feat"><span class="fic">📊</span><span><b>Deep Performance Analysis</b><p>Subject-wise accuracy, weak-topic detection and rank improvement tracking.</p></span></div>
-      <div class="feat"><span class="fic">🚀</span><span><b>Priority Access</b><p>Premium warriors get new tests and material <b>before anyone else</b>.</p></span></div>
-    </div>
-
-    <div class="darkcard" style="text-align:center">
-      <div style="font-weight:900; color:#FCD34D; text-shadow:0 0 10px rgba(252,211,77,.7); margin-bottom:4px">🚪 HOW TO JOIN PREMIUM?</div>
-      <div style="font-size:.88rem; color:#DBEAFE; font-weight:600; margin-bottom:10px">Contact us directly on Telegram —<br><span class="neong" style="font-size:1.05rem; font-weight:900">@THE_SPARTAN_300</span></div>
-      <a class="tgjoin" href="https://t.me/THE_SPARTAN_300" target="_blank" rel="noopener">💬 JOIN NOW ON TELEGRAM</a>
-      <div style="font-size:.78rem; color:#A5B4FC; font-weight:700; margin-top:10px">Seats are limited — the earlier you join, the sharper your edge. 🛡️</div>
-    </div>
-    <div style="text-align:center; margin:10px 0 4px"><button class="btn primary" onclick="backHome()">← Back to Tests</button></div>
-  </div>
-</section>
-
-<!-- ============ ABOUT US ============ -->
-<section id="scrAbout" class="screen">
-  <header class="top">
-    <div class="brand small">
-      <div class="blogo">⚔️</div>
-      <div><div class="bname">SPARTA</div><div class="bsub2">NEET 2027 • CBT</div></div>
-    </div>
-    <button class="btn ghost" onclick="backHome()">← Home</button>
-  </header>
-  <div class="wrap" style="max-width:760px">
-    <div class="darkcard" style="text-align:center; padding:20px 16px">
-      <svg viewBox="0 0 64 64" width="74" height="74" class="fanim-sansad" style="display:inline-block">
-        <line x1="32" y1="24" x2="32" y2="10" stroke="#4338CA" stroke-width="2"/>
-        <path class="flagw" d="M32 10 l11 3.2 -11 3.2 Z" fill="#F97316"/>
-        <path d="M22 36 v-4 a10 6 0 0 1 20 0 v4 Z" fill="#EEF2FF" stroke="#4338CA" stroke-width="2"/>
-        <rect x="10" y="36" width="44" height="13" rx="6.5" fill="#EEF2FF" stroke="#4338CA" stroke-width="2"/>
-        <circle cx="32" cy="42.5" r="13" fill="none" stroke="#4338CA" stroke-width="2.4" stroke-dasharray="2.6 2.6"/>
-        <ellipse cx="32" cy="53" rx="26" ry="5" fill="#C7D2FE"/>
-      </svg>
-      <h2 style="margin:6px 0 2px; color:#E0E7FF; font-size:1.4rem; letter-spacing:1px">🏛️ ABOUT US</h2>
-      <div style="color:#A5B4FC; font-weight:700; font-size:.85rem">The story behind SPARTA</div>
-    </div>
-
-    <div class="darkcard">
-      <div class="aline">⭐ Welcome to <span class="neon">SPARTA</span> — where warriors are made.</div>
-      <div class="aline">🤝 We are <span class="neonp">helping aspirants</span> turn their NEET 2027 dream into a rank.</div>
-      <div class="aline">🛡️ SPARTA is a <span class="neon">100% free</span> CBT platform built by <span class="neong">Team Vidhayak</span>.</div>
-      <div class="aline">📝 We convert real coaching test papers into <span class="neonp">exam-ready online tests</span>.</div>
-      <div class="aline">✅ Every answer key is <span class="neon">verified</span>. Every solution is <span class="neon">explained</span>.</div>
-      <div class="aline">💜 We believe talent deserves <span class="neong">opportunity — not money</span>.</div>
-      <div class="aline">🖥️ Practice on an interface that mirrors the <span class="neonp">real exam</span>.</div>
-      <div class="aline">🚫 No ads. No distractions. <span class="neong">Only preparation.</span></div>
-      <div class="aline">📚 From A.G Sir BAT to SAITS to ALLEN — the best papers, <span class="neon">one place</span>.</div>
-      <div class="aline">🔄 New tests added every week — the platform <span class="neonp">grows with you</span>.</div>
-      <div class="aline">🔥 Your dedication + our platform = an <span class="neong">unstoppable combination</span>.</div>
-      <div class="aline">💬 Join our Telegram channel for updates &amp; announcements.</div>
-      <div class="aline">💜 SPARTA — <span class="neon">A Team Vidhayak Initiative</span>. Made for NEET 2027 Warriors.</div>
-      <div class="aline">🛡️ This is <span class="neonp">SPARTA</span>. Are you ready, warrior?</div>
-    </div>
-    <div style="text-align:center; margin:10px 0 4px"><button class="btn primary" onclick="backHome()">← Back to Tests</button></div>
-  </div>
-</section>
-
 <!-- ============ SYLLABUS READER ============ -->
 <section id="scrSyll" class="screen">
   <header class="top">
@@ -14447,29 +14352,6 @@ async function openSyllabus(){
   });
   show("scrSyll");
 }
-function openPrem(){ const ph=$("premHero"); if(ph && window.PREM_IMG_SRC) ph.src = window.PREM_IMG_SRC; show("scrPrem"); }
-function openAbout(){ show("scrAbout"); }
-const PREM_IMG_SRC = "data:image/webp;base64,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";
-const PREM_SVG = '<img src="' + PREM_IMG_SRC + '" alt="PREMIUM" style="width:44px;height:44px;border-radius:50%;border:2px solid #F59E0B;object-fit:cover">';
-const SANSAD_SVG = '<svg viewBox="0 0 64 64" width="42" height="42"><line x1="32" y1="24" x2="32" y2="10" stroke="#4338CA" stroke-width="2"/><path class="flagw" d="M32 10 l11 3.2 -11 3.2 Z" fill="#F97316"/><path d="M22 36 v-4 a10 6 0 0 1 20 0 v4 Z" fill="#EEF2FF" stroke="#4338CA" stroke-width="2"/><rect x="10" y="36" width="44" height="13" rx="6.5" fill="#EEF2FF" stroke="#4338CA" stroke-width="2"/><circle cx="32" cy="42.5" r="13" fill="none" stroke="#4338CA" stroke-width="2.4" stroke-dasharray="2.6 2.6"/><ellipse cx="32" cy="53" rx="26" ry="5" fill="#C7D2FE"/></svg>';
-function specialTile(animCls, svg, label, labelColor, badge, onOpen){
-  const f = document.createElement("div");
-  f.className = "fitem";
-  const ic = document.createElement("div");
-  ic.className = "ficon " + animCls;
-  ic.innerHTML = svg;
-  const ct = document.createElement("div");
-  ct.className = "fcount";
-  ct.textContent = badge;
-  ic.appendChild(ct);
-  const nm = document.createElement("div");
-  nm.className = "fname";
-  nm.textContent = label;
-  nm.style.color = labelColor;
-  f.appendChild(ic); f.appendChild(nm);
-  f.onclick = onOpen;
-  return f;
-}
 
 /* ================= welcome + telegram gate ================= */
 let gateT = null;
@@ -14683,8 +14565,7 @@ function renderHome(){
   const cos = Object.keys(groups).sort();
   const row = document.createElement("div");
   row.className = "folders";
-  row.appendChild(specialTile("fanim-prem", PREM_SVG, "PREMIUM", "#B45309", "★", ()=>openPrem()));
-  cos.forEach(co=>{
+cos.forEach(co=>{
     const f = document.createElement("div");
     f.className = "fitem";
     const ic = document.createElement("div");
@@ -14701,7 +14582,6 @@ function renderHome(){
     f.onclick = ()=>{ openFolder = (openFolder===co ? null : co); renderHome(); };
     row.appendChild(f);
   });
-  row.appendChild(specialTile("fanim-sansad", SANSAD_SVG, "ABOUT US", "#4338CA", "i", ()=>openAbout()));
   host.appendChild(row);
   cos.forEach(co=>{
     const sec = document.createElement("div");
