@@ -409,8 +409,8 @@
   </header>
   <div class="wrap" style="max-width:860px">
     <div class="card pad" style="text-align:center">
-      <h2 style="margin:0 0 4px; color:var(--deep)">📚 ALLEN Enthuse Online — Syllabus</h2>
-      <div style="color:#7C6FA0; font-weight:700; font-size:.85rem">NEET Enthusiast Online Test Series: Target 2027 (Phase 1 &amp; 2) • Full Test Schedule &amp; Chapter-wise Syllabus</div>
+      <h2 id="sylTitle" style="margin:0 0 4px; color:var(--deep)">📚 ALLEN Enthuse Online — Syllabus</h2>
+      <div id="sylSub" style="color:#7C6FA0; font-weight:700; font-size:.85rem">NEET Enthusiast Online Test Series: Target 2027 (Phase 1 &amp; 2) • Full Test Schedule &amp; Chapter-wise Syllabus</div>
     </div>
     <div id="syllPages"></div>
     <div style="text-align:center; margin:10px 0 4px"><button class="btn primary" onclick="backHome()">← Back to Tests</button></div>
@@ -14337,20 +14337,32 @@ function show(id){
   window.scrollTo(0,0);
 }
 function backHome(){ store.del("sparta_progress"); show("scrHome"); renderHome(); }
-async function openSyllabus(){
-  toast("📚 Loading syllabus…");
-  await window.loadAllenPack();
-  const d = window.ALLEN_SYLLABUS;
-  if(!d || !d.pages || !d.pages.length){ toast("⚠️ Syllabus pack failed to load — refresh and try again."); return; }
+async function openReader(loader, dataKey, title, sub){
+  toast("📚 Loading…");
+  try{ await loader(); }catch(e){}
+  const d = window[dataKey];
+  if(!d || !d.pages || !d.pages.length){ toast("⚠️ Pack failed to load — refresh and try again."); return; }
+  $("sylTitle").textContent = title;
+  $("sylSub").textContent = sub;
   const host = $("syllPages");
   host.innerHTML = "";
   d.pages.forEach(function(src, i){
     const pg = document.createElement("div");
     pg.className = "reader-page";
-    pg.innerHTML = "<div class='reader-tag'>PAGE " + (i+1) + " / " + d.pages.length + "</div><img loading='lazy' alt='Syllabus page " + (i+1) + "' src='" + src + "'>";
+    pg.innerHTML = "<div class='reader-tag'>PAGE " + (i+1) + " / " + d.pages.length + "</div><img loading='lazy' alt='Page " + (i+1) + "' src='" + src + "'>";
     host.appendChild(pg);
   });
   show("scrSyll");
+}
+function openSyllabus(){
+  return openReader(window.loadAllenPack, "ALLEN_SYLLABUS",
+    "📚 ALLEN Enthuse Online — Syllabus",
+    "NEET Enthusiast Online Test Series: Target 2027 (Phase 1 & 2) • Full Test Schedule & Chapter-wise Syllabus");
+}
+function openMajorSchedule(){
+  return openReader(window.loadAllenMajor, "ALLEN_MAJOR_SCHEDULE",
+    "📋 ALLEN MAJOR 26 — Schedule & Syllabus",
+    "ALLEN CCP + AIOT Major Tests (Feb–Apr 2026) • Official Test Dates & Chapter-wise Syllabus");
 }
 
 /* ================= welcome + telegram gate ================= */
@@ -14617,6 +14629,13 @@ cos.forEach(co=>{
       sy.innerHTML = "<span class='syll-ic'>📋</span><span style='flex:1'><span class='syll-tt'>★ FULL SYLLABUS &amp; TEST SCHEDULE</span><br><span class='syll-sub'>ALLEN Enthuse 2026-27 • All Minor/Major Tests • Chapter-wise</span></span><span style='font-size:1.4rem;color:#B45309'>›</span>";
       sy.onclick = ()=>openSyllabus();
       sec.appendChild(sy);
+    }
+    if(co === "ALLEN MAJOR 26"){
+      const ms = document.createElement("button");
+      ms.className = "syll-card";
+      ms.innerHTML = "<span class='syll-ic'>🗓️</span><span style='flex:1'><span class='syll-tt'>★ MAJOR TEST SCHEDULE &amp; SYLLABUS</span><br><span class='syll-sub'>ALLEN CCP/AIOT 2026 • All Major Test Dates • Chapter-wise</span></span><span style='font-size:1.4rem;color:#B45309'>›</span>";
+      ms.onclick = ()=>openMajorSchedule();
+      sec.appendChild(ms);
     }
     host.appendChild(sec);
   });
