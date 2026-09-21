@@ -14413,7 +14413,7 @@ function allTests(){
   const out = [];
   const custom = loadCustom();
   custom.forEach(t=>{ t.custom = true; });
-  const pool = (window.BUNDLED_TESTS||[]).concat(window.EXTERNAL_TESTS||[], window.ALLEN_TESTS||[], custom);
+  const pool = (window.BUNDLED_TESTS||[]).concat(window.EXTERNAL_TESTS||[], window.ALLEN_TESTS||[], window.ALLEN_MAJOR_TESTS||[], custom);
   pool.forEach(t=>{
     const i = out.findIndex(x=>x.id===t.id);
     if(i>=0) out[i]=t; else out.push(t);
@@ -15003,19 +15003,21 @@ function confetti(){
 show("scrGate");
 /* ALLEN Enthuse pack — background lazy loader (12 MB, home khulne ke baad) */
 (function loadAllenPack(){
-  window.loadAllenPack = function(){
-    if(window._allenPackP) return window._allenPackP;
-    window._allenPackP = new Promise(function(res){
-      if(window.ALLEN_TESTS){ res(); return; }
-      const s = document.createElement("script");
-      s.src = "allen-tests.js";
-      s.onload = function(){ try{ renderHome(); }catch(e){} res(); };
-      s.onerror = function(){ res(); };
-      document.head.appendChild(s);
-    });
-    return window._allenPackP;
-  };
-  setTimeout(function(){ window.loadAllenPack(); }, 1200);
+  function lazy(key, file){
+    if(!window[key]){
+      window[key] = new Promise(function(res){
+        var s = document.createElement("script");
+        s.src = file;
+        s.onload = function(){ try{ renderHome(); }catch(e){} res(); };
+        s.onerror = function(){ res(); };
+        document.head.appendChild(s);
+      });
+    }
+    return window[key];
+  }
+  window.loadAllenPack = function(){ return lazy("_allenPackP", "allen-tests.js"); };
+  window.loadAllenMajor = function(){ return lazy("_allenMajorP", "allen-major.js"); };
+  setTimeout(function(){ window.loadAllenPack(); window.loadAllenMajor(); }, 1200);
 })();
 </script>
 </body>
