@@ -14398,7 +14398,10 @@ function tryEnter(){
   }
   enter();
 }
-function enter(){ show("scrHome"); renderHome(); }
+function enter(){
+  show("scrHome"); renderHome();
+  if(window.startPacks){ setTimeout(window.startPacks, 1500); }
+}
 (function initGate(){
   if(CONFIG.accessCode){
     $("codeRow").style.display = "block";
@@ -15036,7 +15039,13 @@ show("scrGate");
   }
   window.loadAllenPack = function(){ return lazy("_allenPackP", "allen-tests.js"); };
   window.loadAllenMajor = function(){ return lazy("_allenMajorP", "allen-major.js"); };
-  setTimeout(function(){ window.loadAllenPack(); window.loadAllenMajor(); }, 1200);
+  window.startPacks = function(){
+    if(window._packsStarted) return;
+    window._packsStarted = true;
+    window.loadAllenPack().then(function(){
+      setTimeout(function(){ window.loadAllenMajor(); }, 2500);
+    });
+  };
 })();
 </script>
 </body>
