@@ -14436,6 +14436,12 @@ function openMajorSchedule(){
     "ALLEN CCP + AIOT Major Tests (Feb–Apr 2026) • Official Test Dates & Chapter-wise Syllabus");
 }
 
+function openNTSSchedule(){
+  return openReader(window.loadNTS, "NTS_SCHEDULE",
+    "🗓️ NTS — Schedule & Planner",
+    "CW-NTS 2027 • CAREERWILL National Test Series • 49 Tests Planner & Chapter-wise Syllabus");
+}
+
 /* ================= welcome + telegram gate ================= */
 let gateT = null;
 function closeWelcome(){ $("ovWelcome").classList.add("hide"); show("scrGate"); }
@@ -14499,7 +14505,7 @@ function allTests(){
   const out = [];
   const custom = loadCustom();
   custom.forEach(t=>{ t.custom = true; });
-  const pool = (window.BUNDLED_TESTS||[]).concat(window.EXTERNAL_TESTS||[], window.ALLEN_TESTS||[], window.ALLEN_MAJOR_TESTS||[], custom);
+  const pool = (window.BUNDLED_TESTS||[]).concat(window.EXTERNAL_TESTS||[], window.ALLEN_TESTS||[], window.ALLEN_MAJOR_TESTS||[], window.NTS_TESTS||[], custom);
   pool.forEach(t=>{
     const i = out.findIndex(x=>x.id===t.id);
     if(i>=0) out[i]=t; else out.push(t);
@@ -14711,6 +14717,13 @@ cos.forEach(co=>{
       ms.innerHTML = "<span class='syll-ic'>🗓️</span><span style='flex:1'><span class='syll-tt'>★ MAJOR TEST SCHEDULE &amp; SYLLABUS</span><br><span class='syll-sub'>ALLEN CCP/AIOT 2026 • All Major Test Dates • Chapter-wise</span></span><span style='font-size:1.4rem;color:#B45309'>›</span>";
       ms.onclick = ()=>openMajorSchedule();
       sec.appendChild(ms);
+    }
+    if(co === "NTS"){
+      const ns = document.createElement("button");
+      ns.className = "syll-card";
+      ns.innerHTML = "<span class='syll-ic'>🗓️</span><span style='flex:1'><span class='syll-tt'>★ NTS TEST SCHEDULE &amp; PLANNER</span><br><span class='syll-sub'>CW-NTS 2027 • All 49 Tests • Chapter-wise Syllabus</span></span><span style='font-size:1.4rem;color:#B45309'>›</span>";
+      ns.onclick = ()=>openNTSSchedule();
+      sec.appendChild(ns);
     }
     host.appendChild(sec);
   });
@@ -15111,11 +15124,14 @@ show("scrGate");
   }
   window.loadAllenPack = function(){ return lazy("_allenPackP", "allen-tests.js"); };
   window.loadAllenMajor = function(){ return lazy("_allenMajorP", "allen-major.js"); };
+  window.loadNTS = function(){ return lazy("_ntsP", "nts.js"); };
   window.startPacks = function(){
     if(window._packsStarted) return;
     window._packsStarted = true;
     window.loadAllenPack().then(function(){
-      setTimeout(function(){ window.loadAllenMajor(); }, 2500);
+      setTimeout(function(){ window.loadAllenMajor().then(function(){
+        setTimeout(function(){ window.loadNTS(); }, 2500);
+      }); }, 2500);
     });
   };
 })();
