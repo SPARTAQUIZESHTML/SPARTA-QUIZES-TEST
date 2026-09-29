@@ -349,7 +349,7 @@
     <div class="gcard">
       <div class="gicon">🔒</div>
       <h2>Members Only Portal</h2>
-      <p>This test series is exclusively for the <b>SPARTA</b> Telegram family.<br>Join the channel first to unlock the tests 💜</p>
+      <p>This test series is exclusively for the <b>SPARTA</b> Telegram family.<br>Join once — <b>unlocked forever</b> 💜</p>
       <a class="btn tg" id="btnJoin" href="https://t.me/SPARTA_EXPERIENCE" target="_blank" rel="noopener" onclick="clickJoin()">📢 Join @SPARTA_EXPERIENCE</a>
       <div class="gurl">🔗 t.me/SPARTA_EXPERIENCE<br><span style="font-size:.85em">(If the link does not open, copy this into Telegram / your browser)</span></div>
       <div id="codeRow" style="display:none; margin-top:14px">
@@ -14367,8 +14367,8 @@ window.BUNDLED_TESTS = [
 /* ================= CONFIG ================= */
 const CONFIG = {
   telegram: "https://t.me/SPARTA_EXPERIENCE",
-  accessCode: "",        // empty ("") = simple join-verify. To require a code, write it here, e.g. "SPARTA2027" (keep it pinned in the channel)
-  joinWait: 10,          // seconds to wait after the Join click before Verify unlocks
+  accessCode: "",        // koi code nahi — simple join gateway
+  joinWait: 10,          // Join dabane ke baad itne second me Enter unlock (sirf pehli baar)
   adminPin: "1227"       // 🔐 Admin PIN for the ➕ import button (change it to anything you like)
 };
 
@@ -14444,20 +14444,20 @@ function openNTSSchedule(){
 
 /* ================= welcome + telegram gate ================= */
 let gateT = null;
-function closeWelcome(){ $("ovWelcome").classList.add("hide"); show("scrGate"); }
+function closeWelcome(){
+  $("ovWelcome").classList.add("hide");
+  if(store.get("sparta_member")){ enter(); return; }   /* join kar chuka — ab gateway kabhi nahi */
+  show("scrGate");
+}
 function clickJoin(){
-  if(gateT) clearInterval(gateT);
-  if(CONFIG.accessCode){
-    $("gateNote").textContent = "📌 Now enter the pinned code from the channel below:";
-    return;
-  }
+  if(gateT) return;
   let left = CONFIG.joinWait;
   $("btnEnter").disabled = true;
   $("gateNote").textContent = "Verifying join… " + left + "s";
   gateT = setInterval(()=>{
     left--;
     if(left<=0){
-      clearInterval(gateT);
+      clearInterval(gateT); gateT = null;
       $("gateNote").textContent = "✅ Verified! Welcome to the SPARTA family 💜";
       $("btnEnter").disabled = false;
     } else {
@@ -14466,25 +14466,17 @@ function clickJoin(){
   },1000);
 }
 function tryEnter(){
-  if(CONFIG.accessCode){
-    const v = ($("codeIn").value||"").trim().toUpperCase();
-    if(v !== CONFIG.accessCode.toUpperCase()){
-      $("gateNote").textContent = "❌ Wrong code! Check the pinned message in the channel.";
-      return;
-    }
-  }
-  enter();
+  store.set("sparta_member", 1);   /* ek baar enter → hamesha ke liye unlocked */
+  $("gateNote").textContent = "✅ Welcome to the SPARTA family 💜";
+  setTimeout(enter, 350);
 }
 function enter(){
   show("scrHome"); renderHome();
   if(window.startPacks){ setTimeout(window.startPacks, 1500); }
 }
 (function initGate(){
-  if(CONFIG.accessCode){
-    $("codeRow").style.display = "block";
-    $("btnEnter").disabled = false;
-    $("gateNote").textContent = "Join and enter the code below 📌";
-  }
+  $("codeRow").style.display = "none";
+  $("gateNote").textContent = "Tap the Join button above first 👆";
 })();
 
 /* ================= custom tests (import) ================= */
