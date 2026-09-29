@@ -277,6 +277,45 @@
     padding:12px 22px; border-radius:999px; font-weight:800; font-size:.86rem; z-index:100;
     box-shadow:0 12px 30px rgba(59,42,107,.4); transition:transform .35s; max-width:92vw; text-align:center}
   #toast.show{transform:translateX(-50%) translateY(0)}
+  /* battle report */
+  .rep-empty{text-align:center;color:#9B87D9;font-weight:800;padding:34px 16px;font-size:.9rem;line-height:1.8}
+  .rep-card{display:flex;gap:12px;align-items:center}
+  .rep-ring{--p:0;width:62px;height:62px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;position:relative}
+  .rep-ring::before{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(#7C3AED calc(var(--p)*1%),#EDE9FE 0)}
+  .rep-ring span{position:relative;background:#fff;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.85rem;color:#6D28D9}
+  .rep-info{flex:1;min-width:0}
+  .rep-title{font-weight:900;font-size:.9rem;color:#312E81;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rep-meta{font-size:.7rem;color:#9B87D9;font-weight:700;margin:2px 0 6px}
+  .rep-bars{display:flex;gap:6px}
+  .rep-mb{flex:1;min-width:34px}
+  .rep-lbl{font-size:.58rem;font-weight:800;color:#9B87D9;margin-bottom:2px}
+  .rep-bar{height:5px;border-radius:4px;background:#EDE9FE;overflow:hidden}
+  .rep-bar i{display:block;height:100%;border-radius:4px}
+  .rep-btns{display:flex;flex-direction:column;gap:6px}
+  .rep-btns .btn{padding:7px 12px;font-size:.74rem}
+  .btn_repwarn{background:#FEF3C7;color:#B45309}
+  .rep-del{background:#FEF2F2;border:none;color:#DC2626;border-radius:10px;font-size:.85rem;padding:6px 12px;cursor:pointer;font-weight:900}
+  .rep-hero{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .rep-bigs{font-size:2.1rem;font-weight:900;color:#6D28D9;line-height:1}
+  .rep-bigs small{font-size:.95rem;color:#9B87D9;font-weight:800}
+  .rep-pct{margin-left:auto;background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;border-radius:999px;padding:7px 15px;font-weight:900}
+  .rep-srow{display:flex;align-items:center;gap:10px;padding:8px 0}
+  .rep-snm{font-weight:800;font-size:.83rem;width:70px}
+  .rep-sbar{flex:1;height:9px;border-radius:6px;background:#EDE9FE;overflow:hidden}
+  .rep-sbar i{display:block;height:100%;border-radius:6px}
+  .rep-ssc{font-weight:900;font-size:.78rem;width:64px;text-align:right;color:#4B5563}
+  .rep-tabs{display:flex;gap:8px;margin:10px 0 2px}
+  .rep-tab{flex:1;text-align:center;padding:9px;border-radius:12px;background:#fff;color:#6D28D9;font-weight:800;font-size:.78rem;border:1.5px solid #EDE9FE;cursor:pointer}
+  .rep-tab.on{background:linear-gradient(135deg,#7C3AED,#A855F7);color:#fff;border-color:transparent}
+  .rep-q{padding:14px;margin:10px 0;border-radius:16px;background:#fff;box-shadow:0 3px 12px rgba(124,58,237,.08);border-left:4px solid #A7F3D0}
+  .rep-q.wrong{border-left-color:#FCA5A5}
+  .rep-q.skip{border-left-color:#D1D5DB}
+  .rep-q img{max-width:100%;border-radius:10px;margin:8px 0;border:1px solid #EDE9FE}
+  .rep-qh{display:flex;gap:6px;align-items:center;margin-bottom:7px;flex-wrap:wrap}
+  .rep-opt{font-size:.8rem;font-weight:700;border-radius:10px;padding:7px 11px;margin:5px 0;border:1.5px solid #EDE9FE}
+  .rep-opt.yes{background:#F0FDF4;border-color:#86EFAC;color:#15803D}
+  .rep-opt.no{background:#FEF2F2;border-color:#FCA5A5;color:#B91C1C}
+  .rep-expl{background:#FAF5FF;border:1.5px solid #E9D5FF;border-radius:10px;padding:9px 12px;font-size:.75rem;color:#6B21A8;font-weight:600;line-height:1.55;margin-top:8px}
 </style>
 
 <style>
@@ -557,6 +596,27 @@
     <div class="card pad" id="resTopics"></div>
     <div class="h3">🔍 Question Review &amp; Explanations</div>
     <div id="resRev" style="margin-bottom:40px"></div>
+  </div>
+</section>
+
+<!-- ============ BATTLE REPORT ============ -->
+<section id="scrReport" class="screen">
+  <header class="top">
+    <div class="brand small">
+      <div class="blogo">⚔️</div>
+      <div><div class="bname">SPARTA</div><div class="bsub2">BATTLE REPORT</div></div>
+    </div>
+    <div class="row" style="margin:0">
+      <button class="btn ghost" onclick="reportHome()">🏠 Home</button>
+    </div>
+  </header>
+  <div class="wrap">
+    <div id="repListWrap"><div id="repList"></div></div>
+    <div id="repDetailWrap" style="display:none">
+      <button class="btn ghost" id="repBack" style="margin:2px 0 8px" onclick="openReport()">← My Attempts</button>
+      <div id="repDetail"></div>
+    </div>
+    <div style="height:36px"></div>
   </div>
 </section>
 
@@ -14610,6 +14670,163 @@ function toast(m){
   t._tid = setTimeout(()=>t.classList.remove("show"), 2600);
 }
 
+/* ================= battle report ================= */
+const REP_SUBJ_META = {Physics:{ic:"⚡",c:"#2563EB"},Chemistry:{ic:"🧪",c:"#059669"},Biology:{ic:"🧬",c:"#DB2777"}};
+function loadAttempts(){ const a = store.get("sparta_attempts"); return Array.isArray(a)?a:[]; }
+function saveAttempts(a){ store.set("sparta_attempts", a.slice(0,50)); }
+function saveAttempt(rec){ const a = loadAttempts(); a.unshift(rec); saveAttempts(a); }
+function buildRecord(){
+  const mc = cur.marksCorrect==null?4:cur.marksCorrect;
+  const mw = cur.marksWrong==null?-1:cur.marksWrong;
+  const subs = Object.keys(R.sub).map(s=>({n:s, c:R.sub[s].c, w:R.sub[s].w, sk:R.sub[s].sk, mx:R.sub[s].n*mc}));
+  return { id:"att_"+Date.now(), testId:cur.id, title:cur.title, coaching:cur.coaching||"", tag:cur.tag||"",
+    when:new Date().toISOString(), mc:mc, mw:mw,
+    score:R.score, max:R.max, pct:R.pct, cor:R.cor, wrg:R.wrg, sk:R.sk, att:R.att, n:R.n, acc:R.acc,
+    usedSec:R.totalTime, subs:subs, answers:S.answers.slice() };
+}
+function fmtWhen(iso){ const d=new Date(iso); try{ return d.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})+" • "+d.toLocaleTimeString("en-IN",{hour:"numeric",minute:"2-digit",hour12:true}); }catch(e){ return String(iso).slice(0,10); } }
+function fmtUsed(s){ const hh=Math.floor(s/3600), mm=Math.round((s%3600)/60); return hh? hh+"h "+mm+"m" : mm+"m"; }
+function makeReportTile(){
+  const n = loadAttempts().length;
+  const f = document.createElement("div");
+  f.className = "fitem";
+  const ic = document.createElement("div");
+  ic.className = "ficon"; ic.style.background = "linear-gradient(135deg,#E0E7FF,#C7D2FE)";
+  ic.textContent = "📊";
+  const ct = document.createElement("div");
+  ct.className = "fcount"; ct.style.background = "#4338CA"; ct.textContent = n;
+  ic.appendChild(ct);
+  const nm = document.createElement("div");
+  nm.className = "fname"; nm.style.color = "#4338CA"; nm.textContent = "BATTLE REPORT";
+  f.appendChild(ic); f.appendChild(nm);
+  f.onclick = ()=>openReport();
+  return f;
+}
+function openReport(){ renderReportList(); $("repListWrap").style.display="block"; $("repDetailWrap").style.display="none"; show("scrReport"); }
+function reportHome(){ show("scrHome"); renderHome(); }
+function repSubsBars(rec){
+  return rec.subs.map(s=>{
+    const m = REP_SUBJ_META[s.n]||{ic:"📘",c:"#7C3AED"};
+    const got = s.c*rec.mc + s.w*rec.mw;
+    const p = s.mx>0 ? Math.max(0, Math.round(got/s.mx*100)) : 0;
+    return "<div class='rep-mb'><div class='rep-lbl'>"+m.ic+" "+p+"%</div><div class='rep-bar'><i style='width:"+p+"%;background:"+m.c+"'></i></div></div>";
+  }).join("");
+}
+function renderReportList(){
+  const list = loadAttempts();
+  const host = $("repList"); host.innerHTML = "";
+  if(!list.length){
+    host.innerHTML = "<div class='rep-empty'>⚔️ Koi attempt nahi hai<br><span style='font-size:.78rem'>Test do — report yahan apne aap banegi 📊</span></div>";
+    return;
+  }
+  list.forEach(rec=>{
+    const card = document.createElement("div");
+    card.className = "card rep-card";
+    const pct = Math.round(rec.pct);
+    const left = document.createElement("div");
+    left.innerHTML =
+      "<div class='rep-ring' style='--p:"+pct+"'><span>"+pct+"%</span></div>" +
+      "<div class='rep-info'><div class='rep-title'>"+esc(rec.title)+"</div>" +
+      "<div class='rep-meta'>🕒 "+fmtWhen(rec.when)+" • ⏱ "+fmtUsed(rec.usedSec)+"</div>" +
+      "<div class='rep-bars'>"+repSubsBars(rec)+"</div></div>";
+    const btns = document.createElement("div");
+    btns.className = "rep-btns";
+    const b1 = document.createElement("button"); b1.className="btn primary"; b1.textContent="📊 Analysis"; b1.onclick=()=>openAnalysis(rec.id);
+    const b2 = document.createElement("button"); b2.className="btn btn_repwarn"; b2.textContent="↻ Reattempt"; b2.onclick=()=>repReattempt(rec.id);
+    const b3 = document.createElement("button"); b3.className="rep-del"; b3.textContent="🗑"; b3.onclick=()=>delAttempt(rec.id);
+    btns.appendChild(b1); btns.appendChild(b2); btns.appendChild(b3);
+    card.appendChild(left); card.appendChild(btns);
+    host.appendChild(card);
+  });
+}
+function delAttempt(id){
+  saveAttempts(loadAttempts().filter(r=>r.id!==id));
+  renderReportList(); renderHome(); toast("🗑 Attempt removed");
+}
+async function repResolve(rec){
+  let t = allTests().find(x=>x.id===rec.testId);
+  if(t) return t;
+  const id = String(rec.testId||"");
+  try{
+    if(id.indexOf("allen-minor")===0 && window.loadAllenPack) await window.loadAllenPack();
+    else if(id.indexOf("allen-major")===0 && window.loadAllenMajor) await window.loadAllenMajor();
+    else if(id.indexOf("nts")===0 && window.loadNTS) await window.loadNTS();
+  }catch(e){}
+  return allTests().find(x=>x.id===rec.testId);
+}
+let REP_CUR = null;
+async function openAnalysis(attId){
+  const rec = loadAttempts().find(r=>r.id===attId);
+  if(!rec){ toast("⚠️ Attempt not found"); return; }
+  toast("📊 Loading report…");
+  const t = await repResolve(rec);
+  if(!t){ toast("⚠️ Test pack load nahi hua — dobara try karo"); return; }
+  REP_CUR = {rec:rec, test:t};
+  renderAnalysis();
+  $("repListWrap").style.display="none";
+  $("repDetailWrap").style.display="block";
+}
+function repReattempt(attId){
+  const rec = loadAttempts().find(r=>r.id===attId);
+  if(!rec) return;
+  toast("🔄 Loading test…");
+  repResolve(rec).then(t=>{
+    if(!t){ toast("⚠️ Test pack load nahi hua"); return; }
+    openInstructions(t);
+  });
+}
+function renderAnalysis(filter){
+  const rec = REP_CUR.rec, t = REP_CUR.test;
+  filter = filter || "all";
+  const pct = Math.round(rec.pct);
+  let x = "<div class='card pad'>"+
+    "<div class='rep-hero'><div><div class='rep-bigs'>"+rec.score+"<small> / "+rec.max+"</small></div>"+
+    "<div style='font-size:.72rem;color:#9B87D9;font-weight:800;margin-top:4px'>🕒 "+fmtWhen(rec.when)+" • ⏱ "+fmtUsed(rec.usedSec)+"</div></div>"+
+    "<span class='rep-pct'>"+pct+"%</span></div>"+
+    "<div class='chips'><span class='chip' style='background:#DCFCE7;color:#15803D'>✅ "+rec.cor+"</span>"+
+    "<span class='chip' style='background:#FEE2E2;color:#B91C1C'>❌ "+rec.wrg+"</span>"+
+    "<span class='chip' style='background:#F3F4F6;color:#6B7280'>⚪ "+rec.sk+"</span>"+
+    "<span class='chip'>🎯 "+Math.round(rec.acc)+"%</span></div></div>";
+  x += "<div class='h3'>📊 Subject-wise Performance</div><div class='card pad'>";
+  rec.subs.forEach(s=>{
+    const m = REP_SUBJ_META[s.n]||{ic:"📘",c:"#7C3AED"};
+    const got = s.c*rec.mc + s.w*rec.mw;
+    const p = s.mx>0? Math.max(0,Math.round(got/s.mx*100)) : 0;
+    x += "<div class='rep-srow'><div style='width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:"+m.c+"1a'>"+m.ic+"</div><div class='rep-snm'>"+esc(s.n)+"</div><div class='rep-sbar'><i style='width:"+p+"%;background:"+m.c+"'></i></div><div class='rep-ssc'>"+got+"<span style='color:#9B87D9'>/"+s.mx+"</span></div></div>";
+  });
+  x += "</div>";
+  const items = t.questions.map((q,i)=>({q:q, i:i}));
+  const nw = items.filter(it=>rec.answers[it.i]>=0 && rec.answers[it.i]!==it.q.answer).length;
+  const nsk = items.filter(it=>rec.answers[it.i]<0).length;
+  x += "<div class='h3'>🔍 Question Review & Explanations</div>";
+  x += "<div class='rep-tabs'><div class='rep-tab"+(filter==="all"?" on":"")+"' data-f='all'>All</div><div class='rep-tab"+(filter==="no"?" on":"")+"' data-f='no'>❌ Wrong ("+nw+")</div><div class='rep-tab"+(filter==="sk"?" on":"")+"' data-f='sk'>⚪ Skipped ("+nsk+")</div></div>";
+  x += "<div id='repRev'></div>";
+  x += "<div style='text-align:center;margin:18px 0 8px'><button class='btn primary' style='padding:13px 26px' id='repReattemptBtn'>↻ REATTEMPT THIS TEST</button></div>";
+  $("repDetail").innerHTML = x;
+  $("repReattemptBtn").onclick = ()=>openInstructions(t);
+  document.querySelectorAll("#repDetail .rep-tab").forEach(tb=>{ tb.onclick = ()=>renderAnalysis(tb.getAttribute("data-f")); });
+  const host = $("repRev");
+  const list = items.filter(it=> filter==="all" ? true : (filter==="sk" ? rec.answers[it.i]<0 : (rec.answers[it.i]>=0 && rec.answers[it.i]!==it.q.answer)));
+  if(!list.length){ host.innerHTML = "<div class='rep-empty'>👍 Yahan kuch nahi hai</div>"; return; }
+  list.forEach(it=>{
+    const q = it.q, ua = rec.answers[it.i];
+    const st = ua<0 ? "sk" : (ua===q.answer ? "ok" : "no");
+    const cls = st==="no"?"wrong":(st==="sk"?"skip":"");
+    let opts = "";
+    (q.options||[]).forEach((o,oi)=>{
+      const isC = oi===q.answer, isM = oi===ua;
+      opts += "<div class='rep-opt "+(isC?"yes":(isM?"no":""))+"'>("+(oi+1)+") "+esc(o)+(isC?" ✅":"")+(isM?" ← tumhara":"")+"</div>";
+    });
+    const sm = REP_SUBJ_META[q.subject]||{ic:"📘"};
+    host.insertAdjacentHTML("beforeend",
+      "<div class='rep-q "+cls+"'><div class='rep-qh'><span style='font-weight:900;color:#6D28D9;font-size:.8rem'>Q"+(it.i+1)+"</span>"+
+      "<span class='chip' style='font-size:.62rem;padding:3px 9px'>"+sm.ic+" "+esc(q.subject)+"</span>"+
+      "<span class='chip' style='font-size:.62rem;padding:3px 9px;"+(st==="ok"?"background:#DCFCE7;color:#15803D":(st==="no"?"background:#FEE2E2;color:#B91C1C":"background:#F3F4F6;color:#6B7280"))+"'>"+(st==="ok"?"✓ Sahi":(st==="no"?"✗ Galat":"⚪ Skip"))+"</span></div>"+
+      (q.img? "<img loading='lazy' src='"+q.img+"' alt='Q"+(it.i+1)+"'>" : "")+
+      "<div style='font-size:.86rem;font-weight:600;line-height:1.55'>"+esc(q.text)+"</div>"+opts+
+      "<div class='rep-expl'>💡 "+esc(q.explanation||("Correct option: ("+(q.answer+1)+")."))+"</div></div>");
+  });
+}
 /* ================= home ================= */
 let openFolder = null;
 function renderHome(){
@@ -14650,6 +14867,7 @@ function renderHome(){
   const row = document.createElement("div");
   row.className = "folders";
   row.appendChild(makeNotesTile());
+  row.appendChild(makeReportTile());
 cos.forEach(co=>{
     const f = document.createElement("div");
     f.className = "fitem";
@@ -14915,6 +15133,7 @@ function finish(auto){
   clearInterval(S.timerId);
   saveProgress();
   R = computeResults();
+  try{ saveAttempt(buildRecord()); }catch(e){}
   renderResult();
   store.del("sparta_progress");
   show("scrResult");
