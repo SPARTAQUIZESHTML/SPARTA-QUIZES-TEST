@@ -14520,7 +14520,7 @@ function tgSlide(){
   const t = $("tgSlide");
   t.classList.add("show");
   if(tgSlideT) clearTimeout(tgSlideT);
-  tgSlideT = setTimeout(()=>{ t.classList.remove("show"); tgSlideT = null; }, 2000);
+  tgSlideT = setTimeout(()=>{ t.classList.remove("show"); tgSlideT = null; }, 5000);
 }
 function closeWelcome(){
   $("ovWelcome").classList.add("hide");
