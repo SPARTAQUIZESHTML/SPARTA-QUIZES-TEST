@@ -407,7 +407,7 @@
         <div style="font-size:.72rem; color:#9B87D9; margin-top:5px; font-weight:700">You will find the code in the pinned message of our Telegram channel 📌</div>
       </div>
       <div id="gateNote" class="gnote">Tap the Join button above first 👆</div>
-      <button id="btnEnter" class="btn primary big" disabled onclick="tryEnter()">🔓 Verify &amp; Enter</button>
+      <button id="btnEnter" class="btn primary big" onclick="tryEnter()">🔓 ENTER APP</button>
     </div>
     <div class="foot" style="justify-content:center">
       <span>🛡️ SPARTA — A Team Vidhayak Initiative 💜</span>
@@ -14439,7 +14439,6 @@ window.BUNDLED_TESTS = [
 const CONFIG = {
   telegram: "https://t.me/SPARTA_EXPERIENCE",
   accessCode: "",        // koi code nahi — simple join gateway
-  joinWait: 10,          // Join dabane ke baad itne second me Enter unlock (sirf pehli baar)
   adminPin: "1227"       // 🔐 Admin PIN for the ➕ import button (change it to anything you like)
 };
 
@@ -14514,7 +14513,6 @@ function openNTSSchedule(){
 }
 
 /* ================= welcome + telegram gate ================= */
-let gateT = null;
 let tgSlideT = null;
 function tgSlide(){
   const t = $("tgSlide");
@@ -14529,20 +14527,7 @@ function closeWelcome(){
   show("scrGate");
 }
 function clickJoin(){
-  if(gateT) return;
-  let left = CONFIG.joinWait;
-  $("btnEnter").disabled = true;
-  $("gateNote").textContent = "Verifying join… " + left + "s";
-  gateT = setInterval(()=>{
-    left--;
-    if(left<=0){
-      clearInterval(gateT); gateT = null;
-      $("gateNote").textContent = "✅ Verified! Welcome to the SPARTA family 💜";
-      $("btnEnter").disabled = false;
-    } else {
-      $("gateNote").textContent = "Verifying join… " + left + "s";
-    }
-  },1000);
+  $("gateNote").textContent = "📢 Channel khul raha hai — join karke wapas aao, phir ENTER dabao 💜";
 }
 function tryEnter(){
   store.set("sparta_member", 1);   /* ek baar enter → hamesha ke liye unlocked */
@@ -14555,7 +14540,8 @@ function enter(){
 }
 (function initGate(){
   $("codeRow").style.display = "none";
-  $("gateNote").textContent = "Tap the Join button above first 👆";
+  $("btnEnter").disabled = false;   /* bulletproof: koi timer nahi — Enter hamesha active */
+  $("gateNote").textContent = "Pehle Join karo ↑, phir ENTER dabao — sirf pehli baar 💜";
 })();
 
 /* ================= custom tests (import) ================= */
