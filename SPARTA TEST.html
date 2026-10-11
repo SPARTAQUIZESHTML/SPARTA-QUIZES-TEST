@@ -14520,17 +14520,25 @@ function tgSlide(){
   if(tgSlideT) clearTimeout(tgSlideT);
   tgSlideT = setTimeout(()=>{ t.classList.remove("show"); tgSlideT = null; }, 5000);
 }
+function isMember(){
+  if(store.get("sparta_member")) return true;
+  try{ return /(?:^|;\s*)sparta_member=1(?:;|$)/.test(document.cookie); }catch(e){ return false; }
+}
+function markMember(){
+  store.set("sparta_member", 1);
+  try{ document.cookie = "sparta_member=1; max-age=31536000; path=/; SameSite=Lax"; }catch(e){}
+}
 function closeWelcome(){
   $("ovWelcome").classList.add("hide");
   tgSlide();
-  if(store.get("sparta_member")){ enter(); return; }   /* join kar chuka — ab gateway kabhi nahi */
+  if(isMember()){ enter(); return; }   /* join kar chuka — ab gateway kabhi nahi */
   show("scrGate");
 }
 function clickJoin(){
   $("gateNote").textContent = "📢 Channel khul raha hai — join karke wapas aao, phir ENTER dabao 💜";
 }
 function tryEnter(){
-  store.set("sparta_member", 1);   /* ek baar enter → hamesha ke liye unlocked */
+  markMember();   /* ek baar enter → hamesha ke liye unlocked (localStorage + cookie dono) */
   $("gateNote").textContent = "✅ Welcome to the SPARTA family 💜";
   setTimeout(enter, 350);
 }
