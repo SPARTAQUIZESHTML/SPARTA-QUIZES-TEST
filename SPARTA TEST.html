@@ -76,7 +76,8 @@
   .btn.lav{background:var(--lav2); color:var(--deep); border:2px solid var(--lav3)}
   .btn.violet{background:#7C3AED; color:#fff}
   .btn.green{background:linear-gradient(90deg,#34D399,#10B981); color:#fff}
-  .btn.submit{background:linear-gradient(90deg,#FB7185,#F43F5E); color:#fff}
+  .btn.stopper{background:linear-gradient(90deg,#FCD34D,#F59E0B); color:#78350F}
+.btn.submit{background:linear-gradient(90deg,#FB7185,#F43F5E); color:#fff}
   .btn.tg{background:var(--tg); color:#fff; padding:13px 22px; font-size:1rem}
   .btn.big{padding:14px 28px; font-size:1.05rem}
   .btn.full{width:100%; margin-top:12px}
@@ -598,6 +599,7 @@
     </div>
     <div class="tsub" id="tTitle"></div>
     <div class="timer" id="tTimer">00:00</div>
+    <button class="btn stopper" onclick="stopTest()">⏸ Stop</button>
     <button class="btn submit" onclick="openSubmit()">Submit ✅</button>
   </div>
   <div class="subjtabs" id="subjTabs"></div>
@@ -15119,6 +15121,16 @@ function saveProgress(){
     testId:S.testId, answers:S.answers, marked:S.marked, visited:S.visited,
     timePerQ:S.timePerQ, cur:S.cur, remaining:S.remaining
   });
+}
+
+function stopTest(){
+  if(!S) return;
+  if(!confirm("⏸ Test pause karein?\n\nProgress save ho jaayega — Home pe Resume banner se wapas aa sakte hain.")) return;
+  saveProgress();
+  clearInterval(S.timerId);
+  S = null;
+  toast("⏸️ Progress saved — Home se Resume karo ▶");
+  show("scrHome"); renderHome();
 }
 
 function buildTabs(){
