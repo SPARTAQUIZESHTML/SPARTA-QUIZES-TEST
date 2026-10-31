@@ -14604,6 +14604,12 @@ function openNTSSchedule(){
     "CW-NTS 2027 • CAREERWILL National Test Series • 49 Tests Planner & Chapter-wise Syllabus");
 }
 
+function openLRTSSchedule(){
+  return openReader(window.loadLRTS, "LRTS_SCHEDULE",
+    "🗓️ UNACADEMY LRTS — Schedule & Syllabus",
+    "Lakshya Revision Test Series 2026 • 6 Part + 2 Semi Major + FST • Official Leaflet");
+}
+
 /* ================= welcome + telegram gate ================= */
 let tgSlideT = null;
 function tgSlide(){
@@ -14662,7 +14668,7 @@ function allTests(){
   const out = [];
   const custom = loadCustom();
   custom.forEach(t=>{ t.custom = true; });
-  const pool = (window.BUNDLED_TESTS||[]).concat(window.EXTERNAL_TESTS||[], window.ALLEN_TESTS||[], window.ALLEN_MAJOR_TESTS||[], window.NTS_TESTS||[], custom);
+  const pool = (window.BUNDLED_TESTS||[]).concat(window.EXTERNAL_TESTS||[], window.ALLEN_TESTS||[], window.ALLEN_MAJOR_TESTS||[], window.NTS_TESTS||[], window.LRTS_TESTS||[], custom);
   pool.forEach(t=>{
     const i = out.findIndex(x=>x.id===t.id);
     if(i>=0) out[i]=t; else out.push(t);
@@ -14856,6 +14862,7 @@ async function repResolve(rec){
     if(id.indexOf("allen-minor")===0 && window.loadAllenPack) await window.loadAllenPack();
     else if(id.indexOf("allen-major")===0 && window.loadAllenMajor) await window.loadAllenMajor();
     else if(id.indexOf("nts")===0 && window.loadNTS) await window.loadNTS();
+    else if(id.indexOf("lrts")===0 && window.loadLRTS) await window.loadLRTS();
   }catch(e){}
   return allTests().find(x=>x.id===rec.testId);
 }
@@ -15039,6 +15046,13 @@ cos.forEach(co=>{
       ns.innerHTML = "<span class='syll-ic'>🗓️</span><span style='flex:1'><span class='syll-tt'>★ NTS TEST SCHEDULE &amp; PLANNER</span><br><span class='syll-sub'>CW-NTS 2027 • All 49 Tests • Chapter-wise Syllabus</span></span><span style='font-size:1.4rem;color:#B45309'>›</span>";
       ns.onclick = ()=>openNTSSchedule();
       sec.appendChild(ns);
+    }
+    if(co === "UNACADEMY LRTS"){
+      const ls = document.createElement("button");
+      ls.className = "syll-card";
+      ls.innerHTML = "<span class='syll-ic'>🗓️</span><span style='flex:1'><span class='syll-tt'>★ LRTS SCHEDULE &amp; SYLLABUS</span><br><span class='syll-sub'>Lakshya Revision 2026 • 6 Part + 2 Semi Major + FST • Leaflet</span></span><span style='font-size:1.4rem;color:#B45309'>›</span>";
+      ls.onclick = ()=>openLRTSSchedule();
+      sec.appendChild(ls);
     }
     host.appendChild(sec);
   });
@@ -15451,12 +15465,15 @@ show("scrGate");
   window.loadAllenPack = function(){ return lazy("_allenPackP", "allen-tests.js"); };
   window.loadAllenMajor = function(){ return lazy("_allenMajorP", "allen-major.js"); };
   window.loadNTS = function(){ return lazy("_ntsP", "nts.js"); };
+  window.loadLRTS = function(){ return lazy("_lrtsP", "lrts.js"); };
   window.startPacks = function(){
     if(window._packsStarted) return;
     window._packsStarted = true;
     window.loadAllenPack().then(function(){
       setTimeout(function(){ window.loadAllenMajor().then(function(){
-        setTimeout(function(){ window.loadNTS(); }, 2500);
+        setTimeout(function(){ window.loadNTS().then(function(){
+          setTimeout(function(){ window.loadLRTS(); }, 2500);
+        }); }, 2500);
       }); }, 2500);
     });
   };
