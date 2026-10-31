@@ -14860,7 +14860,7 @@ async function repResolve(rec){
   const id = String(rec.testId||"");
   try{
     if(id.indexOf("allen-minor")===0 && window.loadAllenPack) await window.loadAllenPack();
-    else if(id.indexOf("allen-major")===0 && window.loadAllenMajor) await window.loadAllenMajor();
+    else if((id.indexOf("allen26-major")===0 || id.indexOf("allen-major")===0) && window.loadAllenMajor) await window.loadAllenMajor();
     else if(id.indexOf("nts")===0 && window.loadNTS) await window.loadNTS();
     else if(id.indexOf("lrts")===0 && window.loadLRTS) await window.loadLRTS();
   }catch(e){}
@@ -15491,7 +15491,7 @@ window.PACK_META["ALLEN MAJOR 26"] = [{"id": "allen26-major-1", "title": "ALLEN 
     if(id.indexOf("allen-minor")===0) return window.loadAllenPack;
     if(id.indexOf("nts")===0) return window.loadNTS;
     if(id.indexOf("lrts")===0) return window.loadLRTS;
-    if(id.indexOf("allen-major")===0) return window.loadAllenMajor;
+    if(id.indexOf("allen26-major")===0 || id.indexOf("allen-major")===0) return window.loadAllenMajor;
     return null;
   };
   window.startPacks = function(){
