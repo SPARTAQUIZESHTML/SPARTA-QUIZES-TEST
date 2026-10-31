@@ -14856,7 +14856,7 @@ function delAttempt(id){
 }
 async function repResolve(rec){
   let t = allTests().find(x=>x.id===rec.testId);
-  if(t) return t;
+  if(t && t.questions) return t;
   const id = String(rec.testId||"");
   try{
     if(id.indexOf("allen-minor")===0 && window.loadAllenPack) await window.loadAllenPack();
@@ -14941,6 +14941,17 @@ function renderAnalysis(filter){
 }
 /* ================= home ================= */
 let openFolder = null;
+async function openPendingTest(id){
+  const L = (window.pendingLoader||function(){return null;})(id);
+  if(!L){ toast("⚠️ Pack loader nahi mila"); return; }
+  toast("📂 Loading tests… 10-20 sec 🙏");
+  try{ await L(); }catch(e){}
+  renderHome();
+  const t = allTests().find(x=>x.id===id);
+  if(t && t.questions){ openInstructions(t); }
+  else { toast("⚠️ Load fail — net check karke dobara try karo"); }
+}
+
 function renderHome(){
   const T = allTests();
   // resume banner
@@ -14948,7 +14959,7 @@ function renderHome(){
   const p = store.get("sparta_progress");
   if(p){
     const t = T.find(x=>x.id===p.testId);
-    if(t && p.answers && p.answers.length === t.questions.length){
+    if(t && t.questions && p.answers && p.answers.length === t.questions.length){
       res.style.display = "block";
       res.innerHTML = "";
       const r = document.createElement("div");
@@ -14975,6 +14986,11 @@ function renderHome(){
   }
   const groups = {};
   T.forEach(t=>{ const c = t.coaching || "General"; (groups[c] = groups[c] || []).push(t); });
+  const haveIds = new Set(T.map(x=>String(x.id)));
+  Object.keys(window.PACK_META||{}).forEach(co=>{
+    if((window.PACK_META[co]||[]).some(m=>haveIds.has(m.id))) return;
+    groups[co] = window.PACK_META[co].map(m=>({ id:m.id, coaching:co, title:m.title, tag:m.tag, durationMinutes:m.durationMinutes, marksCorrect:4, marksWrong:-1, qlen:m.n, pending:true }));
+  });
   const cos = Object.keys(groups).sort();
   const row = document.createElement("div");
   row.className = "folders";
@@ -15006,7 +15022,7 @@ cos.forEach(co=>{
     head.textContent = "📂 " + co;
     sec.appendChild(head);
     groups[co].forEach(t=>{
-      const n = t.questions.length;
+      const n = t.qlen || t.questions.length;
       const mc = t.marksCorrect==null?4:t.marksCorrect;
       const card = document.createElement("div");
       card.className = "card tcard";
@@ -15021,8 +15037,8 @@ cos.forEach(co=>{
         "</div>";
       const b = document.createElement("button");
       b.className = "btn primary";
-      b.textContent = "Start ▶";
-      b.onclick = ()=>openInstructions(t);
+      if(t.pending) b.textContent = "📂 Load ▶";
+      b.onclick = ()=>{ if(t.pending) openPendingTest(t.id); else openInstructions(t); };
       card.appendChild(left); card.appendChild(b);
       sec.appendChild(card);
     });
@@ -15105,7 +15121,7 @@ function resumeTest(){
   const p = store.get("sparta_progress");
   if(!p) return;
   const t = allTests().find(x=>x.id===p.testId);
-  if(!t || !p.answers || p.answers.length!==t.questions.length){ store.del("sparta_progress"); renderHome(); return; }
+  if(!t || !t.questions || !p.answers || p.answers.length!==t.questions.length){ store.del("sparta_progress"); renderHome(); return; }
   cur = t;
   S = {
     testId:t.id, answers:p.answers, marked:p.marked||new Array(t.questions.length).fill(false),
@@ -15464,15 +15480,27 @@ show("scrGate");
   }
   window.loadAllenPack = function(){ return lazy("_allenPackP", "allen-tests.js"); };
   window.loadAllenMajor = function(){ return lazy("_allenMajorP", "allen-major.js"); };
-  window.loadNTS = function(){ return lazy("_ntsP", "nts.js"); };
-  window.loadLRTS = function(){ return lazy("_lrtsP", "lrts.js"); };
+// AUTO-GENERATED pack metadata — instant folders (titles/counts only, no questions)
+window.PACK_META = window.PACK_META || {};
+window.PACK_META["ALLEN ENTHUSE ONLINE"] = [{"id": "allen-minor-1", "title": "ALLEN Minor Test-1 (28 Jun 2026)", "tag": "28 Jun 2026", "durationMinutes": 200, "n": 180}, {"id": "allen-minor-2", "title": "ALLEN Minor Test-2 (12 Jul 2026)", "tag": "12 Jul 2026", "durationMinutes": 200, "n": 180}, {"id": "allen-minor-3", "title": "ALLEN Minor Test-3 (26 Jul 2026)", "tag": "26 Jul 2026", "durationMinutes": 200, "n": 180}, {"id": "allen-minor-4", "title": "ALLEN Minor Test-4 (09 Aug 2026)", "tag": "09 Aug 2026", "durationMinutes": 200, "n": 180}, {"id": "allen-minor-5", "title": "ALLEN Minor Test-5 (23 Aug 2026)", "tag": "23 Aug 2026", "durationMinutes": 200, "n": 180}, {"id": "allen-minor-6", "title": "ALLEN Minor Test-6 (13 Sep 2026)", "tag": "13 Sep 2026", "durationMinutes": 200, "n": 180}];
+window.PACK_META["NTS"] = [{"id": "nts-p1", "title": "NTS Physics P-1 (30 Aug 2026)", "tag": "30 Aug 2026", "durationMinutes": 60, "n": 45}, {"id": "nts-c1", "title": "NTS Chemistry C-1 (06 Sep 2026)", "tag": "06 Sep 2026", "durationMinutes": 60, "n": 45}, {"id": "nts-b1", "title": "NTS Biology B-1 (14 Sep 2026)", "tag": "14 Sep 2026", "durationMinutes": 60, "n": 90}, {"id": "nts-sm1", "title": "NTS Semi Major-01 (15 Sep 2026)", "tag": "15 Sep 2026", "durationMinutes": 180, "n": 180}, {"id": "nts-p2", "title": "NTS Physics P-2 (20 Sep 2026)", "tag": "20 Sep 2026", "durationMinutes": 60, "n": 45}];
+window.PACK_META["UNACADEMY LRTS"] = [{"id": "lrts-pt1", "title": "LRTS Part Test-1 (15 Feb 2026)", "tag": "15 Feb 2026", "durationMinutes": 200, "n": 180}, {"id": "lrts-pt2", "title": "LRTS Part Test-2 (22 Feb 2026)", "tag": "22 Feb 2026", "durationMinutes": 200, "n": 180}, {"id": "lrts-pt3", "title": "LRTS Part Test-3 (01 Mar 2026)", "tag": "01 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "lrts-pt4", "title": "LRTS Part Test-4 (08 Mar 2026)", "tag": "08 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "lrts-pt5", "title": "LRTS Part Test-5 (15 Mar 2026)", "tag": "15 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "lrts-pt6", "title": "LRTS Part Test-6 (22 Mar 2026)", "tag": "22 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "lrts-sm1", "title": "LRTS Semi Major-1 (29 Mar 2026)", "tag": "29 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "lrts-sm2", "title": "LRTS Semi Major-2 (05 Apr 2026)", "tag": "05 Apr 2026", "durationMinutes": 200, "n": 180}, {"id": "lrts-fst2", "title": "LRTS FST-2 (12 Apr 2026)", "tag": "12 Apr 2026", "durationMinutes": 200, "n": 180}];
+window.PACK_META["ALLEN MAJOR 26"] = [{"id": "allen26-major-1", "title": "ALLEN Major Test-1 (21 Feb 2026)", "tag": "21 Feb 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-2", "title": "ALLEN Major Test-2 (26 Feb 2026)", "tag": "26 Feb 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-3", "title": "ALLEN Major Test-3 (03 Mar 2026)", "tag": "03 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-4", "title": "ALLEN Major Test-4 (08 Mar 2026)", "tag": "08 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-5", "title": "ALLEN Major Test-5 (13 Mar 2026)", "tag": "13 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-6", "title": "ALLEN Major Test-6 (18 Mar 2026)", "tag": "18 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-7", "title": "ALLEN Major Test-7 (22 Mar 2026)", "tag": "22 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-8", "title": "ALLEN Major Test-8 (26 Mar 2026)", "tag": "26 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-9", "title": "ALLEN AIOT Major (29 Mar 2026)", "tag": "29 Mar 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-10", "title": "ALLEN Major Test-10 (01 Apr 2026)", "tag": "01 Apr 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-11", "title": "ALLEN Major Test-11 (05 Apr 2026)", "tag": "05 Apr 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-12", "title": "ALLEN Major Test-12 (09 Apr 2026)", "tag": "09 Apr 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-13", "title": "ALLEN Major Test-13 (12 Apr 2026)", "tag": "12 Apr 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-14", "title": "ALLEN Major Test-14 (16 Apr 2026)", "tag": "16 Apr 2026", "durationMinutes": 200, "n": 180}, {"id": "allen26-major-15", "title": "ALLEN Major Test-15 (22 Apr 2026)", "tag": "22 Apr 2026", "durationMinutes": 200, "n": 180}];
+  window.pendingLoader = function(id){
+    id = String(id||"");
+    if(id.indexOf("allen-minor")===0) return window.loadAllenPack;
+    if(id.indexOf("nts")===0) return window.loadNTS;
+    if(id.indexOf("lrts")===0) return window.loadLRTS;
+    if(id.indexOf("allen-major")===0) return window.loadAllenMajor;
+    return null;
+  };
   window.startPacks = function(){
     if(window._packsStarted) return;
     window._packsStarted = true;
     window.loadAllenPack().then(function(){
-      setTimeout(function(){ window.loadAllenMajor().then(function(){
-        setTimeout(function(){ window.loadNTS().then(function(){
-          setTimeout(function(){ window.loadLRTS(); }, 2500);
+      setTimeout(function(){ window.loadNTS().then(function(){
+        setTimeout(function(){ window.loadLRTS().then(function(){
+          setTimeout(function(){ window.loadAllenMajor(); }, 2500);
         }); }, 2500);
       }); }, 2500);
     });
