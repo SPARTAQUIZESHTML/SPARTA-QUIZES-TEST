@@ -14941,15 +14941,28 @@ function renderAnalysis(filter){
 }
 /* ================= home ================= */
 let openFolder = null;
+let _pendBusy = false;
 async function openPendingTest(id){
+  if(_pendBusy){ toast("⏳ Ek download pehle khatam hone do…"); return; }
   const L = (window.pendingLoader||function(){return null;})(id);
-  if(!L){ toast("⚠️ Pack loader nahi mila"); return; }
-  toast("📂 Loading tests… 10-20 sec 🙏");
-  try{ await L(); }catch(e){}
+  if(!L){ if(confirm("App purana hai — refresh karke try karna. Abhi refresh karein?")) location.reload(); return; }
+  _pendBusy = true;
+  toast("📂 Pehli baar download ho raha hai — thoda wait 🙏");
+  let ok = false;
+  for(let attempt = 1; attempt <= 2 && !ok; attempt++){
+    try{ await L(); }catch(e){}
+    const tt = allTests().find(x=>x.id===id);
+    ok = !!(tt && tt.questions);
+    if(!ok && attempt === 1){
+      toast("⚠️ Load fail — dobara koshish kar raha hu…");
+      await new Promise(function(r){ setTimeout(r, 1500); });
+    }
+  }
+  _pendBusy = false;
   renderHome();
   const t = allTests().find(x=>x.id===id);
   if(t && t.questions){ openInstructions(t); }
-  else { toast("⚠️ Load fail — net check karke dobara try karo"); }
+  else { toast("😢 Download fail — net check karke DOBARA TAP karo, ab load ho jaayega"); }
 }
 
 function renderHome(){
@@ -15438,6 +15451,21 @@ function confetti(){
 }
 
 /* boot */
+const APP_VER = "v7";
+(function verCheck(){
+  try{
+    if(sessionStorage.getItem("svc_"+APP_VER)) return;
+    fetch(location.pathname.split("?")[0] + "?nocache=" + Date.now(), {cache:"no-store"})
+    .then(function(r){ return r.text(); }).then(function(t){
+      sessionStorage.setItem("svc_"+APP_VER, "1");
+      var m = t.match(/APP_VER\s*=\s*"([^"]+)"/);
+      if(m && m[1] !== APP_VER){
+        toast("🔄 Naya version live hai — app update ho raha hai…");
+        setTimeout(function(){ location.replace(location.pathname + "?v=" + m[1]); }, 1200);
+      }
+    }).catch(function(){});
+  }catch(e){}
+})();
 (function wireAdmin(){
   if(store.get("sparta_admin")===1){ const f=document.querySelector(".fab"); if(f) f.classList.add("show"); }
   let taps=[];
@@ -15467,15 +15495,30 @@ show("scrGate");
 /* ALLEN Enthuse pack — background lazy loader (12 MB, home khulne ke baad) */
 (function loadAllenPack(){
   function lazy(key, file){
-    if(!window[key]){
-      window[key] = new Promise(function(res){
-        var s = document.createElement("script");
-        s.src = file;
-        s.onload = function(){ try{ renderHome(); }catch(e){} res(); };
-        s.onerror = function(){ res(); };
-        document.head.appendChild(s);
-      });
-    }
+    if(window[key]) return window[key];
+    window[key] = new Promise(function(res, rej){
+      var s = document.createElement("script");
+      var done = false;
+      var to = setTimeout(function(){
+        if(done) return; done = true;
+        try{ s.remove(); }catch(e){}
+        window[key] = null;
+        rej(new Error("timeout: " + file));
+      }, 150000);
+      s.src = file;
+      s.onload = function(){
+        if(done) return; done = true; clearTimeout(to);
+        try{ renderHome(); }catch(e){}
+        res();
+      };
+      s.onerror = function(){
+        if(done) return; done = true; clearTimeout(to);
+        try{ s.remove(); }catch(e){}
+        window[key] = null;   /* self-heal: agla try fresh load karega */
+        rej(new Error("load fail: " + file));
+      };
+      document.head.appendChild(s);
+    });
     return window[key];
   }
   window.loadAllenPack = function(){ return lazy("_allenPackP", "allen-tests.js"); };
@@ -15497,12 +15540,13 @@ window.PACK_META["ALLEN MAJOR 26"] = [{"id": "allen26-major-1", "title": "ALLEN 
   window.startPacks = function(){
     if(window._packsStarted) return;
     window._packsStarted = true;
-    window.loadAllenPack().then(function(){
-      setTimeout(function(){ window.loadNTS().then(function(){
-        setTimeout(function(){ window.loadLRTS().then(function(){
-          setTimeout(function(){ window.loadAllenMajor(); }, 2500);
-        }); }, 2500);
-      }); }, 2500);
+    function nx(f, next){ try{ f().catch(function(){}).then(function(){ setTimeout(next, 2500); }); }catch(e){ setTimeout(next, 2500); } }
+    nx(window.loadAllenPack, function(){
+      nx(window.loadNTS, function(){
+        nx(window.loadLRTS, function(){
+          nx(window.loadAllenMajor, function(){});
+        });
+      });
     });
   };
 })();
